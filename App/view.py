@@ -42,108 +42,112 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
+file = "taxi-trips-wrvz-psew-subset-small.csv"
+
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
 
 
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
-
 def printMenu():
     print("\n")
-    print("*******************************************")
-    print("BIENVENIDO")
-    print("1- Inicializar Analizador")
-    print("2- Cargar información de TAXIS")
-    print("FUNCIONES REQUERIMIENTO 1")
-    print("3- Conocer los accidentes en una fecha")
-    print("4- Conocer los accidentes anteriores a una fecha")
-    print("5- Conocer los accidentes en un rango de fechas")
-    print("6- Conocer el estado con más accidentes")
-    print("7- Conocer los accidentes por rango de horas")
-    print("8- Conocer la zona geográfica más accidentada")
-    print("0- Salir")
-    print("*******************************************")
+    print("************************************************")
+    print(color.YELLOW + "BIENVENIDO" + color.END)
+    print("\n")
+    print(color.DARKCYAN + "FUNCIONES REQUERIMIENTO 1" + color.END)
+    print(color.BOLD + "1-" + color.END + " Inicializar analizador.")
+    print(color.BOLD + "2-" + color.END + " Cargar información de servicios.")
+    print(color.BOLD + "3-" + color.END + " Mostrar el top de compañías.")
+    print("\n")
+    print(color.DARKCYAN + "FUNCIONES REQUERIMIENTO 2" + color.END)
+    print(color.BOLD + "4- " + color.END + "Los N taxis con más puntos en una fecha")
+    print(color.BOLD + "5- " + color.END + "Los M taxis con más puntos en un rango de fechas")
+    print("\n")
+    print(color.DARKCYAN + "FUNCIONES REQUERIMIENTO 3" + color.END)
+    print(color.BOLD + "6- " + color.END + "Conecer el mejor horario para desplazarse entre dos " + color.UNDERLINE + "Community Area " + color.END)
+    print("\n")
+    print(color.BOLD + "0- SALIR" + color.END)
+    print("************************************************")
+
+def optionTwo():
+    print("\nCargando información de servicios...")
+    controller.loadFile(cont,file)
+    print("Total de compañías cargadas: "+str(controller.companiesSize(cont)))
+    print("Total de taxis cargados: "+str(controller.cabsSize(cont)))
+
+def optionThree():
+    controller.topCompanies(cont)
+
+#def optionFour():
+     #N = input("Por favor indique los N taxis a consultar: ")
+     #date = input("Por favor indique la fecha a consultar: ")
+#    controller.
+
+#def optionFive():
+     #M = input("Por favor indique los N taxis a consultar: ")
+     #print("A continuación le pediremos ingrese su rango de fechas a consultar")
+     #date1 = input("Por favor ingrese la fecha inicial: ")
+     #date2 = input("Por favor ingrese la fecha final: ")
+#    controller.
+
+#def optionSix():
+    #origin = input("Por favor ingrese el área de origen: ")
+    #destiny = input("Por favor ingrese el área de destino: ")
+    #print("RANGO DE FECHAS")
+    #fecha1 = input("Por favor ingrese la fecha inicial: ")  
+    #fecha2 = input("Por favor ingrese la fecha final: ")    
+
+#    controller.
+
 
 """
 Menu principal
 """
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n>')
+    opcion = input('Seleccione una opción para continuar: ')
 
-    if int(inputs[0]) == 1:
-        print("\nInicializando....")
-        # cont es el controlador que se usará de acá en adelante
-        cont = controller.init()
+    if int(len(opcion)==1) and int(opcion[0])==1:
+        print("\nInicializando...")
 
-    elif int(inputs[0]) == 2:
-        print("\nCargando información de accidentes aéreos ....")
-        controller.loadData(cont, accidentsFile)
-        print('ÁRBOL DE FECHAS')
-        print('Accidentes cargados: ' + str(controller.accidentsSize(cont)))
-        print('Altura del arbol: ' + str(controller.indexHeight(cont)))
-        print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
-        print('Menor Llave: ' + str(controller.minKey(cont)))
-        print('Mayor Llave: ' + str(controller.maxKey(cont)))
-        print('\n')
-        print('ÁRBOL DE HORAS')
-        print('Altura del arbol: ' + str(controller.timeIndexHeight(cont)))
-        print('Elementos en el arbol: ' + str(controller.timeIndexSize(cont)))
-        print('Menor Llave: ' + str(controller.minKeyTime(cont)))
-        print('Mayor Llave: ' + str(controller.maxKeyTime(cont)))
+        cont = controller.initCatalog()
+        
 
-    elif int(inputs[0]) == 3:
-        print("\nBuscando accidentes en una fecha específica: ")
-        date = input("Ingrese la fecha a buscar (YYYY-MM-DD): ") 
-        numAccidents = controller.getAccidentsByDate(cont,date)
-        if numAccidents == 0:
-            print("La fecha ingresada no tiene accidentes relacionados.")
-        else:
-            print('\nNúmero total de accidentes con severidad 1 en esa fecha: ' + str(numAccidents[0]))
-            print('\nNúmero total de accidentes con severidad 2 en esa fecha: ' +str(numAccidents[1]))
-            print('\nNúmero total de accidentes con severidad 3 en esa fecha: ' +str(numAccidents[2]))
-            print('\nNúmero total de accidentes con severidad 4 en esa fecha: ' +str(numAccidents[3]))
+    elif int(opcion[0])==2:
 
-    elif int(inputs[0]) == 4:
-        print("\nBuscando accidentes anteriores a una fecha: ")
+        tiempoEjecución = timeit.timeit(optionTwo, number=1)
+        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
 
-        date = input("Ingrese la fecha a buscar (YYYY-MM-DD): ")
-        total,fecha = controller.getAccidentsBeforeTo(cont,date)
-        print("\nEl total de accidentes antes de la fecha ingresada son : " )
-        print(total)
-        print("\nLa fecha con más accidentes registrados, anterior a la fecha ingresada es:")
-        print(fecha)
+    elif int(opcion[0])==3:
 
-    elif int(inputs[0]) == 5:
-        print("\nBuscando accidentes en un rango de fechas: ")
-        dateInit = input("Ingrese la fecha inicial (YYYY-MM-DD): ")
-        finalDate = input("Ingrese la fecha final (YYY-MM-DD): ")
-        result=controller.getTotalAccidentsReq3(cont,dateInit,finalDate)
-        print('El total de accidentes en ese rango de fechas es: '+ str(result[1]))
-        print('La categoria con mas accidentes en el rango de fechas es: '+ result[0])
+        tiempoEjecución = timeit.timeit(optionThree, number=1)
+        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
 
-    elif int(inputs[0]) == 6:
-        print("\nBuscando el estado con más accidentes: ")
-        dateInit = input("Ingrese la fecha inicial (YYYY-MM-DD): ")
-        finalDate = input("Ingrese la fecha final (YYY-MM-DD): ")
-        result = controller.getStateWithMoreAccidents(cont,dateInit,finalDate)
-        print("La fecha con más accidentes reportados en el rango de fechas es: "+result[0])
-        print("El estado con más accidentes reportados en el rango de fechas es: " + result[1])
+#    elif int(opcion[0])==4:
+#        tiempoEjecución = timeit.timeit(opcionFour, number=1)
+#        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+    
+#    elif int(opcion[0])==5:
+#        tiempoEjecución = timeit.timeit(opcionFive, number=1)
+#        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+    
+#    elif int(opcion[0])==4:
+#        tiempoEjecución = timeit.timeit(opcionSix, number=1)
+#        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+    
 
-    elif int(inputs[0]) == 7:
-        print("\nBuscando accidentes por rango de horas: ")
-        timeInit = input("Ingrese la hora inicial (00:00-23:59): ") 
-        Finaltime = input("Ingrese la hora final (00:00-23:59): ")
-        printAccidentsByTimeRange(cont,timeInit,Finaltime)
-          
-    elif int(inputs[0]) == 8:
-        print("\nBuscando la zona geográfica más accidentada: ")
-        preference = input("Digite 'Mi' si desea realizar la búsqueda en Millas. 'Km' si desea realizarla en Kilómetros: ")
-        latitude = input("Ingrese la latitud: ")
-        length = input("Ingrese la longitud: ")
-        rad = input("Ingrese el radio a buscar: ")
-        printZoneWithMoreAccidents(cont,float(latitude),float(length),float(rad),preference)
-
-    else:
+    else: 
         sys.exit(0)
 sys.exit(0)
