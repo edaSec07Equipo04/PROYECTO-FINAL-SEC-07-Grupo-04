@@ -42,12 +42,53 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
-
+file = "taxi-trips-wrvz-psew-subset-small.csv"
 
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
+def printMenu():
+    print("\n")
+    print("************************************************")
+    print("BIENVENIDO")
+    print("1- Inicializar analizador.")
+    print("2- Cargar información de servicios.")
+    print("3- Mostrar el top de compañías.")
+    print("************************************************")
+
+def optionTwo():
+    print("\nCargando información de servicios...")
+    controller.loadFile(cont,file)
+    print("Total de compañías cargadas: "+str(controller.companiesSize(cont)))
+    print("Total de taxis cargados: "+str(controller.cabsSize(cont)))
+
+def optionThree():
+    controller.topCompanies(cont)
 
 """
 Menu principal
 """
+while True:
+    printMenu()
+    opcion = input('Seleccione una opción para continuar: ')
+
+    if int(len(opcion)==1) and int(opcion[0])==1:
+        print("\nInicializando...")
+
+        cont = controller.initCatalog()
+        
+
+    elif int(opcion[0])==2:
+
+        #OJO CON TIEMPO DE EJECUCION#
+        tiempoEjecución = timeit.timeit(optionTwo, number=1)
+        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+
+    elif int(opcion[0])==3:
+
+        #OJO CON TIEMPO DE EJECUCION#
+        tiempoEjecución = timeit.timeit(optionThree, number=1)
+        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+    else: 
+        sys.exit(0)
+sys.exit(0)

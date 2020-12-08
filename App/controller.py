@@ -40,12 +40,38 @@ recae sobre el controlador.
 #  Inicializacion del catalogo
 # ___________________________________________________
 
+def initCatalog():
+    """
+    Llama la función de inicialización del catálogo del modelo.
+    """
+    catalog = model.newCatalog()
+    return catalog
 
 # ___________________________________________________
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
 
+def loadFile(catalog,informationFile):
+    informationFile = cf.data_dir +informationFile
+    inputFile = csv.DictReader(open(informationFile,encoding="utf-8-sig"),delimiter=",")
+    for trip in inputFile:
+        taxiId = trip['taxi_id']
+        company = trip['company']
+        if company == "":
+            company = "Independent Owner"
+        model.addCab(catalog,taxiId)
+        model.addCompany(catalog,company)
+        model.addCabInCompany(catalog,company,taxiId)
+
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+def topCompanies(catalog):
+    return model.topCompanies(catalog)
+
+def companiesSize(catalog):
+    return model.companiesSize(catalog)
+
+def cabsSize(catalog):
+    return model.cabsSize(catalog)
