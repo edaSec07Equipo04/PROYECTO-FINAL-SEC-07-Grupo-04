@@ -48,9 +48,15 @@ de creacion y consulta sobre las estructuras de datos.
 # Funciones de consulta
 # ==============================
 
+
+
+
 # ==============================
 # Funciones Helper
 # ==============================
+
+
+
 
 # ==============================
 # Funciones de Comparacion
