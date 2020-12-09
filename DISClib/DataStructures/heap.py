@@ -195,30 +195,6 @@ def swim(heap, pos):
     except Exception as exp:
         error.reraise(exp, 'heap:swim')
 
-def swimMax(heap, pos):
-    """
-    Ubica en el lugar indicado un elemento adicionado
-    en la última posición
-
-    Args:
-        heap: El arreglo con la informacion
-        pos: posicion en el arreglo a revisar
-
-    Returns:
-        El arreglo en forma de heap
-    Raises:
-        Exception
-    """
-    try:
-        while (pos > 1):
-            parent = lt.getElement(heap['elements'], int((pos/2)))
-            element = lt.getElement(heap['elements'], int(pos))
-            if smaller(heap, parent, element):
-                exchange(heap, pos, int(pos/2))
-            pos = pos//2
-    except Exception as exp:
-        error.reraise(exp, 'heap:swimMax')
-
 
 def sink(heap, pos):
     """
@@ -249,35 +225,6 @@ def sink(heap, pos):
     except Exception as exp:
         error.reraise(exp, 'heap:sink')
 
-def sinkMax(heap, pos):
-    """
-    Ubica en la posición correcta un elemento ubicado en la raíz del heap
-
-    Args:
-        heap: El arreglo con la informacion
-        pos: posicion en el arreglo a revisar
-
-    Returns:
-        El arreglo en forma de heap
-    Raises:
-        Exception
-    """
-    try:
-        size = heap['size']
-        while ((2*pos <= size)):
-            j = 2*pos
-            if (j < size):
-                if smaller(heap, lt.getElement(heap['elements'], j),
-                           lt.getElement(heap['elements'], (j+1))):
-                    j += 1
-            if (not smaller(heap, lt.getElement(heap['elements'], pos),
-                            lt.getElement(heap['elements'], j))):
-                break
-            exchange(heap, pos, j)
-            pos = j
-    except Exception as exp:
-        error.reraise(exp, 'heap:sinkMax')
-
 
 def greater(heap, element1, element2):
     """
@@ -286,18 +233,6 @@ def greater(heap, element1, element2):
     try:
         cmp = heap['cmpfunction'](element1, element2)
         if cmp > 0:
-            return True
-        return False
-    except Exception as exp:
-        error.reraise(exp, 'heap:greater')
-
-def smaller(heap, element1, element2):
-    """
-    Indica si el elemento 1 es menor que el elemento 2
-    """
-    try:
-        cmp = heap['cmpfunction'](element1, element2)
-        if cmp < 0:
             return True
         return False
     except Exception as exp:

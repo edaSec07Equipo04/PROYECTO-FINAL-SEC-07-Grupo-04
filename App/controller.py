@@ -60,6 +60,7 @@ def loadFile(catalog,informationFile):
         company = trip['company']
         if company == "":
             company = "Independent Owner"
+        model.addService(catalog,trip)
         model.addCab(catalog,taxiId)
         model.addCompany(catalog,company)
         model.addCabInCompany(catalog,company,taxiId)
@@ -70,8 +71,5 @@ def loadFile(catalog,informationFile):
 def topCompanies(catalog):
     return model.topCompanies(catalog)
 
-def companiesSize(catalog):
-    return model.companiesSize(catalog)
-
-def cabsSize(catalog):
-    return model.cabsSize(catalog)
+def servicesSize(catalog):
+    return model.servicesSize(catalog)

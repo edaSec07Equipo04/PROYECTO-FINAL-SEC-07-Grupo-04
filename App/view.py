@@ -42,7 +42,6 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
-file = "taxi-trips-wrvz-psew-subset-small.csv"
 
 class color:
    PURPLE = '\033[95m'
@@ -65,30 +64,70 @@ def printMenu():
     print("\n")
     print("************************************************")
     print(color.YELLOW + "BIENVENIDO" + color.END)
-    print("\n")
-    print(color.DARKCYAN + "FUNCIONES REQUERIMIENTO 1" + color.END)
+
     print(color.BOLD + "1-" + color.END + " Inicializar analizador.")
     print(color.BOLD + "2-" + color.END + " Cargar información de servicios.")
+    print(color.DARKCYAN + "FUNCIONES REQUERIMIENTO 1" + color.END)
     print(color.BOLD + "3-" + color.END + " Mostrar el top de compañías.")
-    print("\n")
+
     print(color.DARKCYAN + "FUNCIONES REQUERIMIENTO 2" + color.END)
     print(color.BOLD + "4- " + color.END + "Los N taxis con más puntos en una fecha")
     print(color.BOLD + "5- " + color.END + "Los M taxis con más puntos en un rango de fechas")
-    print("\n")
+
     print(color.DARKCYAN + "FUNCIONES REQUERIMIENTO 3" + color.END)
     print(color.BOLD + "6- " + color.END + "Conecer el mejor horario para desplazarse entre dos " + color.UNDERLINE + "Community Area " + color.END)
-    print("\n")
+
     print(color.BOLD + "0- SALIR" + color.END)
     print("************************************************")
 
 def optionTwo():
+    asking = True
+    problem = "No se encontró el archivo buscado. Ingréselo nuevamente."
+    fileRequest = input("¿Qué archivo desea cargar? (small, medium, large): ")
+    while asking:
+        if fileRequest.lower() == "small":
+            file = "taxi-trips-wrvz-psew-subset-small.csv"
+            asking = False
+        elif fileRequest.lower() == "medium":
+            file = "taxi-trips-wrvz-psew-subset-medium.csv"
+            asking = False
+        elif fileRequest.lower() == "large":
+            file = "taxi-trips-wrvz-psew-subset-large.csv"
+            asking = False
+        else:
+            print(problem)
+            fileRequest = input("¿Qué archivo desea cargar? (small, medium, large): ")
     print("\nCargando información de servicios...")
     controller.loadFile(cont,file)
-    print("Total de compañías cargadas: "+str(controller.companiesSize(cont)))
-    print("Total de taxis cargados: "+str(controller.cabsSize(cont)))
+    print('Número de servicios cargados: ' +str(controller.servicesSize(cont)))
 
 def optionThree():
-    controller.topCompanies(cont)
+    cabsLimit = int(input("Ingrese el número de compañías que desea en su top de taxis afiliados: "))
+    servicesLimit = int(input("Ingrese el número de compañías que desea en su top de servicios prestados: "))
+    print("\n")
+    totalCompanies,totalCabs,companyServicesD,servicesSorted,companyCabsD,cabsSorted=controller.topCompanies(cont)
+    print(color.RED+"Número total de taxis en los servicios cargados: " +color.END+ str(totalCabs))
+    print(color.RED+"Número total de compañías con al menos un taxi inscrito: " +color.END+ str(totalCompanies))
+    print(color.GREEN +"======== Top " + str(cabsLimit) + ' de compañías según taxis afiliados ========'+color.END)
+    cabsCount = 1
+    for name in enumerate(cabsSorted):
+        if cabsCount > cabsLimit:
+            break
+        else:
+            print(str(cabsCount)+"- "+color.RED+'Empresa: ' +color.END+ name[1][0]+color.RED+
+             ' Taxis afiliados: '+color.END+str(companyCabsD[name[1][0]]))
+            cabsCount += 1
+    print(color.GREEN +"=========================================================="+color.END)
+    print(color.GREEN +"======== Top " + str(servicesLimit) + ' de compañías según servicios prestados ========'+color.END)
+    servicesCount = 1
+    for name in enumerate(servicesSorted):
+        if servicesCount > servicesLimit:
+            break
+        else:
+            print(str(servicesCount)+"- "+color.RED+'Empresa: ' +color.END+ name[1][0] + color.RED+' Servicios prestados: '
+                    +color.END+ str(companyServicesD[name[1][0]]))
+            servicesCount += 1
+    print(color.GREEN +"=============================================================="+color.END)
 
 #def optionFour():
      #N = input("Por favor indique los N taxis a consultar: ")
