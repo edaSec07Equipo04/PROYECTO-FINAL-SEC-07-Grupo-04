@@ -61,74 +61,8 @@ def newCatalog():
                                     comparefunction=compareCompaniesByName)
     catalog['services'] = lt.newList('ARRAY_LIST')
     catalog['dates']=om.newMap(omaptype='RBT',comparefunction=compareDates)
+    
     return catalog
-
-def addAccident(analyzer, taxi_id):
-    """
-    """
-    
-    updateDateIndex(analyzer['dates'], taxi_id)
-    
-
-def updateDateIndex(map, date):
-    """
-    Se toma la fecha del accidente y se busca si ya existe en el arbol
-    dicha fecha.  Si es asi, se adiciona a su lista de accidentnes
-    y se actualiza el indice de tipos de accidentnes.
-    Si no se encuentra creado un nodo para esa fecha en el arbol
-    se crea y se actualiza el indice de tipos de accidentnes
-    """
-    occurreddate = date['trip_start_timestamp']
-    fix_date= occurreddate[:10]
-    
-    taxi_date = datetime.datetime.strptime(fix_date, '%Y-%m-%d')
-    
-    entry = om.get(map, taxi_date.date())
-    if entry is None:
-        servicio_prestado=0
-        #datentry = newDataEntry2(accident)
-        trip= m.newMap(4447,
-                        maptype='PROBING',
-                        loadfactor=0.5,
-                        comparefunction=compareCabsById)
-        om.put(map, taxi_date.date(), trip )
-        datos_trip=lt.newList('ARRAY_LIST')
-        lt.addLast(datos_trip,date['trip_miles'])
-        lt.addLast(datos_trip,date['trip_total'])
-        lt.addLast(datos_trip,servicio_prestado)
-        m.put(trip,date['taxi_id'],datos_trip)
-        #key: fecha valor:key:taxi id valor: {total: 6, millas: 0 , viajes: 0 }, key                                 ]
-    else:
-        
-        datentry = me.getValue(entry)
-        booleano=m.contains(datentry,date['taxi_id'])
-        if booleano == False:
-            datos_trip=lt.newList('ARRAY_LIST')
-            lt.addLast(datos_trip,date['trip_miles'])
-            lt.addLast(datos_trip,date['trip_total'])
-            lt.addLast(datos_trip,servicio_prestado)
-            m.put(trip,date['taxi_id'],datos_trip)
-        else:
-            lista=m.get(datentry,date['taxi_id'])
-            lista['elements'][0]+=date['trip_miles']
-            lista['elements'][1]+=date['trip_total']
-            lista['elements'][2]+=1
-    print(trip)
-    #addDateIndex(datentry, accident)
-
-    #return map
-    
-
-def newDataEntry2(trip):
-
-    entry={'taxis':None,'lstaccidents':None, 'states':None}
-    entry['severityIndex']=m.newMap(numelements=5,
-                                 maptype='PROBING',
-                                 comparefunction=compareSeverity)
-    entry['lstaccidents']=lt.newList('SINGLE_LINKED',compareDates)
-    entry['states'] = lt.newList('ARRAY_LIST',compareStates)
-
-    return entry
 
 def newCab(taxiId):
     """
