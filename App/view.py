@@ -167,6 +167,10 @@ while True:
     elif int(opcion[0])==2:
 
         tiempoEjecución = timeit.timeit(optionTwo, number=1)
+        print('Altura del arbol: ' + str(controller.dateIndexHeight(cont)))
+        print('Elementos en el arbol: ' + str(controller.dateIndexSize(cont)))
+        print('Menor Llave: ' + str(controller.minKeyDate(cont)))
+        print('Mayor Llave: ' + str(controller.maxKeyDate(cont)))
         print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
 
     elif int(opcion[0])==3:

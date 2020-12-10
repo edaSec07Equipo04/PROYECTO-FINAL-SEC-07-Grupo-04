@@ -28,11 +28,11 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.DataStructures import mapentry as me
 from DISClib.ADT import list as lt
+from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
-from DISClib.ADT import orderedmap as om
 import datetime
 import operator
 assert config
@@ -60,9 +60,7 @@ def newCatalog():
                                     loadfactor=0.5,
                                     comparefunction=compareCompaniesByName)
     catalog['services'] = lt.newList('ARRAY_LIST')
-
-    catalog['dates']= om.newMap(omaptype='RBT',
-                                      comparefunction=compareDates)
+    catalog['dates']=om.newMap(omaptype='RBT',comparefunction=compareDates)
     return catalog
 
 def addAccident(analyzer, taxi_id):
@@ -152,6 +150,51 @@ def newCompany(companyName):
                                 comparefunction=compareCabsById)
     return company
 # Funciones para agregar informacion al catálogo
+
+def addDate(catalog,trip):
+    updateDateIndex(catalog['dates'],trip)
+    return catalog
+
+def updateDateIndex(map,trip):
+    ocurreddate = trip['trip_start_timestamp']
+    taxi_date = ocurreddate[:10]
+    tripdate = datetime.datetime.strptime(taxi_date,'%Y-%m-%d')
+    entry = om.get(map,tripdate.date())
+    if entry is None:
+        dateEntry = newDataEntry(trip)
+        om.put(map,tripdate.date(),dateEntry)
+    else:
+        dateEntry = me.getValue(entry)
+    addDateIndex(dateEntry,trip)
+    return map
+
+def addDateIndex(dateEntry,trip):
+    lst = dateEntry['lstTrips']
+    lt.addLast(lst,trip)
+    taxiIndex=dateEntry['taxiId']
+    taxiEntry = m.get(taxiIndex,trip['taxi_id'])
+    if taxiEntry is None:
+        entry = newTaxiEntry(trip['taxi_id'],trip)
+        lt.addLast(entry['lstTaxi'],trip)
+        m.put(taxiIndex,trip['taxi_id'],entry)
+    else:
+        entry = me.getValue(taxiEntry)
+        lt.addLast(entry['lstTaxi'],trip)
+    return dateEntry
+
+def newTaxiEntry(taxiId,taxi):
+    taxiEntry = {'taxi':None,'lstTaxi':None}
+    taxiEntry['taxi'] = taxiId
+    taxiEntry['lstTaxi'] = lt.newList('ARRAY_LIST',compareDates)
+    return taxiEntry
+
+def newDataEntry(trip):
+    entry = {'taxiId':None,'lstTrips':None}
+    entry['taxiId'] = m.newMap(numelements=20143,
+                                maptype='PROBING',
+                                comparefunction=compareCabsById)
+    entry['lstTrips'] = lt.newList('ARRAY_LIST',compareDates)
+    return entry 
 
 def addService(catalog,service):
     services = catalog['services']
@@ -253,7 +296,18 @@ def cabsSize(catalog):
     size = m.size(catalog['totalCabs'])
     return size
 
+def dateIndexHeight(catalog):
 
+    return om.height(catalog['dates'])
+
+def dateIndexSize(catalog):
+    return om.size(catalog['dates'])
+
+def minKeyDate(catalog):
+    return om.minKey(catalog['dates'])
+
+def maxKeyDate(catalog):
+    return om.maxKey(catalog['dates'])
 # ==============================
 # Funciones Helper
 # ==============================
@@ -294,12 +348,13 @@ def compareCabsById(keyname, cab):
         return -1
 
 def compareDates(date1, date2):
-    
+    """
+    Compara dos ids de viajes, id es un identificador
+    y entry una pareja llave-valor
+    """
     if (date1 == date2):
         return 0
     elif (date1 > date2):
         return 1
     else:
         return -1
-
-

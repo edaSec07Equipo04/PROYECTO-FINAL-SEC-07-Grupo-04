@@ -65,8 +65,7 @@ def loadFile(catalog,informationFile):
         model.addCab(catalog,taxiId)
         model.addCompany(catalog,company)
         model.addCabInCompany(catalog,company,taxiId)
-        model.addAccident(catalog,trip)
-
+        model.addDate(catalog,trip)
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
@@ -75,3 +74,15 @@ def topCompanies(catalog):
 
 def servicesSize(catalog):
     return model.servicesSize(catalog)
+
+def dateIndexHeight(catalog):
+    return model.dateIndexHeight(catalog)
+
+def dateIndexSize(catalog):
+    return model.dateIndexSize(catalog)
+
+def minKeyDate(catalog):
+    return model.minKeyDate(catalog)
+
+def maxKeyDate(catalog):
+    return model.maxKeyDate(catalog)
