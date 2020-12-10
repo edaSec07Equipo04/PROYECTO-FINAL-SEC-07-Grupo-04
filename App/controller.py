@@ -58,12 +58,14 @@ def loadFile(catalog,informationFile):
     for trip in inputFile:
         taxiId = trip['taxi_id']
         company = trip['company']
+        
         if company == "":
             company = "Independent Owner"
         model.addService(catalog,trip)
         model.addCab(catalog,taxiId)
         model.addCompany(catalog,company)
         model.addCabInCompany(catalog,company,taxiId)
+        model.addAccident(catalog,trip)
 
 # ___________________________________________________
 #  Funciones para consultas
