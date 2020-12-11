@@ -124,22 +124,45 @@ def optionThree():
         if servicesCount > servicesLimit:
             break
         else:
-            print(str(servicesCount)+"- "+color.RED+'Empresa: ' +color.END+ name[1][0] + color.RED+' Servicios prestados: '
+            print(str(servicesCount)+"- "+ color.RED+'Empresa: ' +color.END + name[1][0] + color.RED+' Servicios prestados: '
                     +color.END+ str(companyServicesD[name[1][0]]))
             servicesCount += 1
     print(color.GREEN +"=============================================================="+color.END)
 
-#def optionFour():
-     #N = input("Por favor indique los N taxis a consultar: ")
-     #date = input("Por favor indique la fecha a consultar: ")
-#    controller.
+def optionFour():
+    N = int(input("Por favor indique los N taxis a consultar: "))
+    date = input("Por favor indique la fecha a consultar (AAAA-MM-DD): ")
+    topPoints,pointsSorted = controller.topCabsInDate(cont,date)
+    if topPoints == 0 and pointsSorted == 1:
+        print('La fecha ingresada no se encuentra dentro de la base de datos')
+    else: 
+        pointsCount = 1
+        print(color.GREEN +"============= Top " + str(N) + ' de taxis con más puntos en ' + date +' ============='+color.END)
+        for name in enumerate(pointsSorted):
+            if pointsCount > N:
+                break
+            else:
+                print(str(pointsCount)+"- "+ color.RED +'Taxi: '+ color.END + name[1][0]) 
+                print(color.RED+' \tTotal de puntos: '+color.END+str(topPoints[name[1][0]]))
+                pointsCount+=1
+        print(color.GREEN +"===================================================================="+color.END)
 
-#def optionFive():
-     #M = input("Por favor indique los N taxis a consultar: ")
-     #print("A continuación le pediremos ingrese su rango de fechas a consultar")
-     #date1 = input("Por favor ingrese la fecha inicial: ")
-     #date2 = input("Por favor ingrese la fecha final: ")
-#    controller.
+def optionFive():
+    M = int(input("Por favor indique los N taxis a consultar: "))
+    print("A continuación le pediremos ingrese su rango de fechas a consultar")
+    date1 = input("Por favor ingrese la fecha inicial: (AAAA-MM-DD")
+    date2 = input("Por favor ingrese la fecha final: (AAAA-MM-DD")
+    totalData,dataSorted = controller.topCabsInRange(cont,date1,date2)
+    pointsCount = 1
+    print(color.GREEN +"============= Top " + str(M) + ' de taxis con más puntos entre ' + date1 +' y '+date2+' ============='+color.END)
+    for name in enumerate(dataSorted):
+        if pointsCount > M:
+            break
+        else:
+            print(str(pointsCount)+"- "+ color.RED +'Taxi: '+ color.END + name[1][0])
+            print(color.RED+' \tTotal de puntos: '+color.END+str(totalData[name[1][0]])) 
+            pointsCount += 1
+    print(color.GREEN +"===================================================================="+color.END)
 
 #def optionSix():
     #origin = input("Por favor ingrese el área de origen: ")
@@ -178,13 +201,13 @@ while True:
         tiempoEjecución = timeit.timeit(optionThree, number=1)
         print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
 
-#    elif int(opcion[0])==4:
-#        tiempoEjecución = timeit.timeit(opcionFour, number=1)
-#        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+    elif int(opcion[0])==4:
+        tiempoEjecución = timeit.timeit(optionFour, number=1)
+        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
     
-#    elif int(opcion[0])==5:
-#        tiempoEjecución = timeit.timeit(opcionFive, number=1)
-#        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+    elif int(opcion[0])==5:
+        tiempoEjecución = timeit.timeit(optionFive, number=1)
+        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
     
 #    elif int(opcion[0])==4:
 #        tiempoEjecución = timeit.timeit(opcionSix, number=1)

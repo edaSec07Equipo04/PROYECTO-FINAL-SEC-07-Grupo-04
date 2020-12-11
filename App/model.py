@@ -60,8 +60,9 @@ def newCatalog():
                                     loadfactor=0.5,
                                     comparefunction=compareCompaniesByName)
     catalog['services'] = lt.newList('ARRAY_LIST')
-    catalog['dates']=om.newMap(omaptype='RBT',comparefunction=compareDates)
-    
+    catalog['dates']=om.newMap(omaptype='RBT',
+                                comparefunction=compareDates)
+
     return catalog
 
 def newCab(taxiId):
@@ -103,32 +104,49 @@ def updateDateIndex(map,trip):
     return map
 
 def addDateIndex(dateEntry,trip):
-    lst = dateEntry['lstTrips']
-    lt.addLast(lst,trip)
-    taxiIndex=dateEntry['taxiId']
-    taxiEntry = m.get(taxiIndex,trip['taxi_id'])
-    if taxiEntry is None:
-        entry = newTaxiEntry(trip['taxi_id'],trip)
-        lt.addLast(entry['lstTaxi'],trip)
-        m.put(taxiIndex,trip['taxi_id'],entry)
+    trip_miles = (trip['trip_miles'])
+    trip_miles.replace(" ","")
+    if trip_miles == "":
+        trip_miles = 0
     else:
-        entry = me.getValue(taxiEntry)
-        lt.addLast(entry['lstTaxi'],trip)
+        trip_miles = float(trip_miles)
+    trip_total = (trip['trip_total'])
+    trip_total.replace(" ","")
+    if trip_total == "":
+        trip_total = 0
+    else:
+        trip_total=float(trip_total)
+    if trip_miles > 0.0 and trip_total > 0.0:
+        lst = dateEntry['lstTrips']
+        lt.addLast(lst,trip)
+        taxiIndex=dateEntry['taxiId']
+        taxiEntry = m.get(taxiIndex,trip['taxi_id'])
+        if taxiEntry is None:
+            entry = newTaxiEntry(trip['taxi_id'],trip)
+            entry['distance']+=trip_miles
+            entry['cash'] +=trip_total
+            lt.addLast(entry['lstTaxi'],trip)
+            m.put(taxiIndex,trip['taxi_id'],entry)
+        else:
+            entry = me.getValue(taxiEntry)
+            lt.addLast(entry['lstTaxi'],trip)
+            entry['distance']+=trip_miles
+            entry['cash'] +=trip_total
     return dateEntry
-
-def newTaxiEntry(taxiId,taxi):
-    taxiEntry = {'taxi':None,'lstTaxi':None}
-    taxiEntry['taxi'] = taxiId
-    taxiEntry['lstTaxi'] = lt.newList('ARRAY_LIST',compareDates)
-    return taxiEntry
 
 def newDataEntry(trip):
     entry = {'taxiId':None,'lstTrips':None}
     entry['taxiId'] = m.newMap(numelements=20143,
                                 maptype='PROBING',
                                 comparefunction=compareCabsById)
-    entry['lstTrips'] = lt.newList('ARRAY_LIST',compareDates)
+    entry['lstTrips'] = lt.newList('ARRAY_LIST',compareCabsById)
     return entry 
+
+def newTaxiEntry(taxiId,taxi):
+    taxiEntry = {'taxi':None,'lstTaxi':None,'distance':0.0,'cash':0.0}
+    taxiEntry['taxi'] = taxiId
+    taxiEntry['lstTaxi'] = lt.newList('ARRAY_LIST',compareCabsById)
+    return taxiEntry
 
 def addService(catalog,service):
     services = catalog['services']
@@ -210,6 +228,52 @@ def topCompanies(catalog):
     cabsSorted = sorted(companyCabsD.items(),key=operator.itemgetter(1),reverse=True)
     return totalCompanies,totalCabs,companyServicesD,servicesSorted,companyCabsD,cabsSorted
 
+def topCabsInDate(catalog,date):
+    topPoints = {}
+    taxiDate = om.get(catalog['dates'],date)
+    if taxiDate:
+        if taxiDate['key'] is not None:
+            taxiMap = me.getValue(taxiDate)['taxiId']
+            keySet = m.keySet(taxiMap)
+            iteratorKS = it.newIterator(keySet)
+            while it.hasNext(iteratorKS):
+                taxiId = it.next(iteratorKS)
+                info = m.get(taxiMap,taxiId)
+                services = (m.size(me.getValue(info)['lstTaxi']))
+                distance = (me.getValue(info)['distance'])
+                cash = (me.getValue(info)['cash'])
+                points = (distance/cash)*services
+                topPoints[taxiId] = round(points,3)
+            pointsSorted = sorted(topPoints.items(),key=operator.itemgetter(1),reverse=True)
+            return topPoints,pointsSorted
+    else:
+        return 0,1
+
+def topCabsInRange(catalog,initialDate,finalDate):
+    totalData = {}
+    values = om.values(catalog['dates'],initialDate,finalDate)
+    iterator = it.newIterator(values)
+    while it.hasNext(iterator):
+        topPoints = {}
+        info = it.next(iterator)
+        keySet = m.keySet(info['taxiId'])
+        iteratorKS = it.newIterator(keySet)
+        while it.hasNext(iteratorKS):
+            taxiId = it.next(iteratorKS)
+            inf = m.get(info['taxiId'],taxiId)
+            services = m.size(me.getValue(inf)['lstTaxi'])
+            distance = me.getValue(inf)['distance']
+            cash = me.getValue(inf)['cash']
+            points = (distance/cash)*services
+            topPoints[taxiId] = points
+        for key,value in topPoints.items():
+            if key in totalData.keys():
+                totalData[key]+=value
+            else:
+                totalData[key] = value
+    dataSorted = sorted(totalData.items(),key=operator.itemgetter(1),reverse=True)
+    return totalData,dataSorted
+
 def servicesSize(catalog):
     """
     Informa el número de servicios reportados
@@ -231,7 +295,7 @@ def cabsSize(catalog):
     return size
 
 def dateIndexHeight(catalog):
-
+    
     return om.height(catalog['dates'])
 
 def dateIndexSize(catalog):

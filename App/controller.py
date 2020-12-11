@@ -26,6 +26,7 @@
 
 import config as cf
 from App import model
+import datetime
 import csv
 
 """
@@ -71,6 +72,15 @@ def loadFile(catalog,informationFile):
 # ___________________________________________________
 def topCompanies(catalog):
     return model.topCompanies(catalog)
+
+def topCabsInDate(catalog,date):
+    dateTime = datetime.datetime.strptime(date,'%Y-%m-%d')
+    return model.topCabsInDate(catalog,dateTime.date())
+
+def topCabsInRange(catalog,initialDate,finalDate):
+    initDate = datetime.datetime.strptime(initialDate,'%Y-%m-%d')
+    finDate = datetime.datetime.strptime(finalDate,'%Y-%m-%d')
+    return model.topCabsInRange(catalog,initDate.date(),finDate.date())
 
 def servicesSize(catalog):
     return model.servicesSize(catalog)
