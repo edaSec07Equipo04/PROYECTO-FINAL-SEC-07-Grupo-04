@@ -81,18 +81,3 @@ def topCabsInRange(catalog,initialDate,finalDate):
     initDate = datetime.datetime.strptime(initialDate,'%Y-%m-%d')
     finDate = datetime.datetime.strptime(finalDate,'%Y-%m-%d')
     return model.topCabsInRange(catalog,initDate.date(),finDate.date())
-
-def servicesSize(catalog):
-    return model.servicesSize(catalog)
-
-def dateIndexHeight(catalog):
-    return model.dateIndexHeight(catalog)
-
-def dateIndexSize(catalog):
-    return model.dateIndexSize(catalog)
-
-def minKeyDate(catalog):
-    return model.minKeyDate(catalog)
-
-def maxKeyDate(catalog):
-    return model.maxKeyDate(catalog)

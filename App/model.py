@@ -229,14 +229,17 @@ def topCompanies(catalog):
     return totalCompanies,totalCabs,companyServicesD,servicesSorted,companyCabsD,cabsSorted
 
 def topCabsInDate(catalog,date):
-    topPoints = {}
+    """
+    Identifica los N taxis con más puntos para en una fecha determinada.
+    """
+    topPoints = {}  
     taxiDate = om.get(catalog['dates'],date)
     if taxiDate:
-        if taxiDate['key'] is not None:
+        if taxiDate['key'] is not None:  #Se ingresa a la información en la fecha ingresada
             taxiMap = me.getValue(taxiDate)['taxiId']
             keySet = m.keySet(taxiMap)
             iteratorKS = it.newIterator(keySet)
-            while it.hasNext(iteratorKS):
+            while it.hasNext(iteratorKS):  #Se recorre cada ID de taxi en la fecha ingresada y se calculan sus respectivos puntos
                 taxiId = it.next(iteratorKS)
                 info = m.get(taxiMap,taxiId)
                 services = (m.size(me.getValue(info)['lstTaxi']))
@@ -244,7 +247,7 @@ def topCabsInDate(catalog,date):
                 cash = (me.getValue(info)['cash'])
                 points = (distance/cash)*services
                 topPoints[taxiId] = round(points,3)
-            pointsSorted = sorted(topPoints.items(),key=operator.itemgetter(1),reverse=True)
+            pointsSorted = sorted(topPoints.items(),key=operator.itemgetter(1),reverse=True) #Se ordenan los taxis de acuerdo a los puntos
             return topPoints,pointsSorted
     else:
         return 0,1
@@ -253,12 +256,12 @@ def topCabsInRange(catalog,initialDate,finalDate):
     totalData = {}
     values = om.values(catalog['dates'],initialDate,finalDate)
     iterator = it.newIterator(values)
-    while it.hasNext(iterator):
+    while it.hasNext(iterator): #Se visita cada una de las fechas dentro del rango ingresado
         topPoints = {}
         info = it.next(iterator)
         keySet = m.keySet(info['taxiId'])
         iteratorKS = it.newIterator(keySet)
-        while it.hasNext(iteratorKS):
+        while it.hasNext(iteratorKS): #Se recorre cada ID de taxi en la fecha y se calculan sus respectivos puntos
             taxiId = it.next(iteratorKS)
             inf = m.get(info['taxiId'],taxiId)
             services = m.size(me.getValue(inf)['lstTaxi'])
@@ -266,12 +269,12 @@ def topCabsInRange(catalog,initialDate,finalDate):
             cash = me.getValue(inf)['cash']
             points = (distance/cash)*services
             topPoints[taxiId] = points
-        for key,value in topPoints.items():
+        for key,value in topPoints.items(): #Si el ID se encuentra en el conjunto de datos, se suman sus valores, de lo contrario se agrega
             if key in totalData.keys():
                 totalData[key]+=value
             else:
                 totalData[key] = value
-    dataSorted = sorted(totalData.items(),key=operator.itemgetter(1),reverse=True)
+    dataSorted = sorted(totalData.items(),key=operator.itemgetter(1),reverse=True) #Se ordenan los taxis de acuerdo a los puntos
     return totalData,dataSorted
 
 def servicesSize(catalog):
@@ -294,18 +297,6 @@ def cabsSize(catalog):
     size = m.size(catalog['totalCabs'])
     return size
 
-def dateIndexHeight(catalog):
-    
-    return om.height(catalog['dates'])
-
-def dateIndexSize(catalog):
-    return om.size(catalog['dates'])
-
-def minKeyDate(catalog):
-    return om.minKey(catalog['dates'])
-
-def maxKeyDate(catalog):
-    return om.maxKey(catalog['dates'])
 # ==============================
 # Funciones Helper
 # ==============================
