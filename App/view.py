@@ -162,8 +162,8 @@ def optionFour():
 def optionFive():
     M = int(input("Por favor indique los N taxis a consultar: "))
     print("A continuación le pediremos ingrese su rango de fechas a consultar")
-    date1 = input("Por favor ingrese la fecha inicial: (AAAA-MM-DD")
-    date2 = input("Por favor ingrese la fecha final: (AAAA-MM-DD")
+    date1 = input("Por favor ingrese la fecha inicial: (AAAA-MM-DD): ")
+    date2 = input("Por favor ingrese la fecha final: (AAAA-MM-DD): ")
     totalData,dataSorted = controller.topCabsInRange(cont,date1,date2)
     pointsCount = 1
     print(color.GREEN +"============= Top " + str(M) + ' de taxis con más puntos entre ' + date1 +' y '+date2+' ============='+color.END)
@@ -176,14 +176,40 @@ def optionFive():
             pointsCount += 1
     print(color.GREEN +"===================================================================="+color.END)
 
-#def optionSix():
-    #origin = input("Por favor ingrese el área de origen: ")
-    #destiny = input("Por favor ingrese el área de destino: ")
-    #print("RANGO DE FECHAS")
-    #fecha1 = input("Por favor ingrese la fecha inicial: ")  
-    #fecha2 = input("Por favor ingrese la fecha final: ")    
+def optionSix():
+    origin = input("Por favor ingrese el área de origen: ")
+    destiny = input("Por favor ingrese el área de destino: ")
+    print("RANGO DE HORARIO")
+    hora1 = input("Por favor ingrese la hora inicial (MM:SS): ")  
+    hora2 = input("Por favor ingrese la hora final: (MM:SS): ")    
 
-#    controller.
+    path,time = controller.mejorH(origin,destiny,hora1,hora2,cont)
+    
+    elemento1 = lt.getElement(path,1) #Sacamos de la lista el vertive inicial y final
+    elemento2 = lt.lastElement(path)
+
+    e1 = elemento1.split(" ")         #Separamos hora de vertice
+    e2 = elemento2.split(" ") 
+    tInicial = e1[1]                  #Hora de inicio
+    tFinal   = e2[1]                  #Hora Final
+
+    print("\n")
+    print(color.GREEN + "El mejor horario para iniciar el viaje es a las: "+color.END)
+    print(tInicial)
+    tamanio = lt.size(path)
+    print("\n")
+    print(color.GREEN + "RUTA MÁS APROPIADA" + color.END)
+    for i in  range(1,int(tamanio)+1):
+
+        a = lt.getElement(path,i)
+        b = a.split(" ")
+        vertice = b[0]
+        print(color.BLUE + "Community Area número " + str(i) + ": "+color.END + vertice) 
+    print("\n")
+    print(color.GREEN + "El tiempo estimado de viaje es: "+color.END)
+    controller.segundosAfecha(time)   #Tiempo de viaje en formato bonito
+    print("\n")
+
 
 
 """
@@ -216,6 +242,12 @@ while True:
     elif int(opcion[0])==5:
         tiempoEjecución = timeit.timeit(optionFive, number=1)
         print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+
+    elif int(opcion[0])==6:
+        tiempoEjecución = timeit.timeit(optionSix, number=1)
+        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+
+    
 
 
     

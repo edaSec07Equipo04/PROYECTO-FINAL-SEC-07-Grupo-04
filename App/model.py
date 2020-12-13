@@ -54,8 +54,8 @@ def newCatalog():
         catalog = {'totalCabs':None,
                     'companies':None,
                     'services':None,
-                    'graph'   :None,
-                    'paths'   :None,
+                    'graph'   :None,  # <-------------- Aquí se crea el grafo
+                    'paths'   :None, 
                     'dates'   :None}
         catalog['totalCabs'] = m.newMap(20143,
                                         maptype='PROBING',
@@ -207,14 +207,16 @@ def addCab(catalog,taxiId):
         data = newCab(taxiId)     
         m.put(cabs,taxiId,data)
     data['trips'] += 1
-#############################################
+#--------------------------------------------
+# Funciones para agregar información al grafo
+#-------------------------------------------
 
 def addTrip(catalog, trip):
     """
     """
     origin = trip['pickup_community_area']
     destination = trip['dropoff_community_area']
-    
+    # Se verifica que los valores no sean vacios o nulos
     if origin != destination:        
         if trip['trip_seconds'] != "" and trip['trip_seconds']!= None:
             if origin != None and destination != None:
@@ -224,7 +226,8 @@ def addTrip(catalog, trip):
                     d = float(trip['trip_seconds'])
                     
                     duration = int(d)
-                              
+                    #Se crea un vertice por cada horario
+                    # Vertice = n° vertice + horario        
                     ocurredhour_initial = trip['trip_start_timestamp']
                     taxi_hour_initial = ocurredhour_initial[11:16]
                     
@@ -424,7 +427,7 @@ def cabsSize(catalog):
     size = m.size(catalog['totalCabs'])
     return size
 
-def funcion(origen,destino,horaI,horaF,catalog):
+def mejorHorario(origen,destino,horaI,horaF,catalog):
 
     menor=100000000000000000000000
     menorp=''        
@@ -433,7 +436,7 @@ def funcion(origen,destino,horaI,horaF,catalog):
     f = datetime.datetime.strptime(horaF, '%H:%M') 
     
     while i < f:       
-        inicio = origen + " " + horaI
+        inicio = origen + " " + horaI  
         i = datetime.datetime.strptime(horaI, '%H:%M')
         caminos = minimumCostPaths(catalog,inicio)       
         if caminos != -1:

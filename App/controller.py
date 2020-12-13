@@ -99,8 +99,8 @@ def connectedComponents(catalog):
 def sameCC(catalog,station1,station2):
     return model.sameCC(catalog,station1,station2)
 
-def pruebas(origen,destino,horaI,horaF, catalog):
-    return model.funcion(origen,destino,horaI,horaF, catalog)
+def mejorH(origen,destino,horaI,horaF, catalog):
+    return model.mejorHorario(origen,destino,horaI,horaF, catalog)
 
 #===========
 # Helper
