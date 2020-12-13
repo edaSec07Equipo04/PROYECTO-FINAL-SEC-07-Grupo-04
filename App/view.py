@@ -30,7 +30,9 @@ import config
 from App import controller
 from DISClib.ADT import stack
 import timeit
+from DISClib.ADT import list as lt
 assert config
+
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -42,6 +44,8 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
+
+recursionLimit = 20000
 
 class color:
    PURPLE = '\033[95m'
@@ -101,6 +105,14 @@ def optionTwo():
     controller.loadFile(cont,file)
     print('Número de servicios cargados: ' +str(controller.servicesSize(cont)))
 
+    numedges = controller.totalConnections(cont)        #Número de arcos
+    numvertex = controller.totalStops(cont)             #Número de vértices
+    print('Numero de vertices: ' + str(numvertex))
+    print('Numero de arcos: ' + str(numedges))
+    sys.setrecursionlimit(recursionLimit)
+    print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
+    
+
 def optionThree():
     cabsLimit = int(input("Ingrese el número de compañías que desea en su top de taxis afiliados: "))
     servicesLimit = int(input("Ingrese el número de compañías que desea en su top de servicios prestados: "))
@@ -124,7 +136,7 @@ def optionThree():
         if servicesCount > servicesLimit:
             break
         else:
-            print(str(servicesCount)+"- "+ color.RED+'Empresa: ' +color.END + name[1][0] + color.RED+' Servicios prestados: '
+            print(str(servicesCount)+"- "+color.RED+'Empresa: ' +color.END+ name[1][0] + color.RED+' Servicios prestados: '
                     +color.END+ str(companyServicesD[name[1][0]]))
             servicesCount += 1
     print(color.GREEN +"=============================================================="+color.END)
@@ -204,10 +216,8 @@ while True:
     elif int(opcion[0])==5:
         tiempoEjecución = timeit.timeit(optionFive, number=1)
         print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
-    
-#    elif int(opcion[0])==4:
-#        tiempoEjecución = timeit.timeit(opcionSix, number=1)
-#        print("El tiempo de ejecución de la función fue: " + str(tiempoEjecución)+ ' segundos')
+
+
     
 
     else: 
