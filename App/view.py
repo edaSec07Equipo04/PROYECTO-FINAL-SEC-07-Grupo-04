@@ -206,7 +206,6 @@ def optionSix():
     print("\n")
 
 
-
 """
 Menu principal
 """
