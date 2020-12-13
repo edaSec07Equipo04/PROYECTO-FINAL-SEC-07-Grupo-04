@@ -30,7 +30,9 @@ import config
 from App import controller
 from DISClib.ADT import stack
 import timeit
+from DISClib.ADT import list as lt
 assert config
+
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -42,6 +44,8 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
+
+recursionLimit = 20000
 
 class color:
    PURPLE = '\033[95m'
@@ -100,6 +104,14 @@ def optionTwo():
     print("\nCargando información de servicios...")
     controller.loadFile(cont,file)
     print('Número de servicios cargados: ' +str(controller.servicesSize(cont)))
+
+    numedges = controller.totalConnections(cont)        #Número de arcos
+    numvertex = controller.totalStops(cont)             #Número de vértices
+    print('Numero de vertices: ' + str(numvertex))
+    print('Numero de arcos: ' + str(numedges))
+    sys.setrecursionlimit(recursionLimit)
+    print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
+    
 
 def optionThree():
     cabsLimit = int(input("Ingrese el número de compañías que desea en su top de taxis afiliados: "))

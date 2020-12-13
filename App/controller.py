@@ -54,7 +54,8 @@ def initCatalog():
 
 def loadFile(catalog,informationFile):
     informationFile = cf.data_dir +informationFile
-    inputFile = csv.DictReader(open(informationFile,encoding="utf-8-sig"),delimiter=",")
+    inputFile = csv.DictReader(open(informationFile, encoding="utf-8"),
+                                delimiter=",")
     for trip in inputFile:
         taxiId = trip['taxi_id']
         company = trip['company']
@@ -64,6 +65,7 @@ def loadFile(catalog,informationFile):
         model.addCab(catalog,taxiId)
         model.addCompany(catalog,company)
         model.addCabInCompany(catalog,company,taxiId)
+        model.addTrip(catalog, trip)
 
 # ___________________________________________________
 #  Funciones para consultas
@@ -73,3 +75,29 @@ def topCompanies(catalog):
 
 def servicesSize(catalog):
     return model.servicesSize(catalog)
+
+def totalConnections(catalog):
+    return model.totalConnections(catalog)
+
+def totalStops(catalog):
+    return model.totalStops(catalog)
+
+def connectedComponents(catalog):
+    return model.numSCC(catalog)
+
+def sameCC(catalog,station1,station2):
+    return model.sameCC(catalog,station1,station2)
+
+def pruebas(origen,destino,horaI,horaF, catalog):
+    return model.funcion(origen,destino,horaI,horaF, catalog)
+
+#===========
+# Helper
+#==========
+
+def segundosAfecha(seconds):
+    """
+    Transforma segundos a días, horas, minutos y segundos.
+    """
+    return model.convertSecondsToDate(seconds)
+    
