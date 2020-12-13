@@ -55,7 +55,8 @@ def newCatalog():
                     'companies':None,
                     'services':None,
                     'graph'   :None,
-                    'paths'   :None}
+                    'paths'   :None,
+                    'dates'   :None}
         catalog['totalCabs'] = m.newMap(20143,
                                         maptype='PROBING',
                                         loadfactor=0.5,
@@ -69,6 +70,8 @@ def newCatalog():
                                             directed=True,
                                             size=1000,
                                             comparefunction=compareStations)
+        catalog['dates']=om.newMap(omaptype='RBT',
+                                comparefunction=compareDates)
         return catalog
     except Exception as exp:
         error.reraise(exp, 'model:newCatalog')
@@ -534,6 +537,9 @@ def compareDates(date1, date2):
     if (date1 == date2):
         return 0
     elif (date1 > date2):
+         return 1
+    else:
+        return -1
 def compareValues(v1,v2):
     if v1 == v2:
         return 0
