@@ -272,36 +272,6 @@ def addConnection(catalog,origin,destination,duration):
 # Funciones de consulta para el GRAFO
 # ====================================
 
-def totalStops(catalog):
-    """
-    Retorna el total de estaciones (vertices) del grafo
-    """
-    return gr.numVertices(catalog['graph'])
-
-
-def totalConnections(catalog):
-    """
-    Retorna el total arcos del grafo
-    """
-    return gr.numEdges(catalog['graph'])   
-
-def numSCC(graph):
-    """
-    Informa cuántos componentes fuertemente conectados se encontraron
-    """
-    sc = scc.KosarajuSCC(graph)
-    return scc.connectedComponents(sc)
-
-def sameCC(graph,station1,station2):
-    """
-    Informa si dos estaciones están en el mismo componente conectado.
-    """
-    sc = scc.KosarajuSCC(graph)
-    return scc.stronglyConnected(sc,station1,station2)
-
-def stationsSize(graph):
-    return lt.size(graph['stations'])
-
 def minimumCostPaths(catalog,station):
     """
     Calcula los caminos de costo mínimo desde la estación
@@ -383,6 +353,9 @@ def topCabsInDate(catalog,date):
         return 0,1
 
 def topCabsInRange(catalog,initialDate,finalDate):
+    """
+    Identifica los M taxis con más puntos para un rango entre dos fechas determinadas (fecha inicial y fecha final).
+    """
     totalData = {}
     values = om.values(catalog['dates'],initialDate,finalDate)
     iterator = it.newIterator(values)
@@ -428,7 +401,13 @@ def cabsSize(catalog):
     return size
 
 def mejorHorario(origen,destino,horaI,horaF,catalog):
-
+    """
+    Dados el área de origen, el área de destino y el rango de tiempo en el día en el que se quiere iniciar el viaje;
+    genera un reporte que incluye: 
+    - El mejor horario (hora:minutos) de inicio de viaje (en el área de origen) en el rango de tiempo dado para tener la menor duración posible.
+    - La ruta (secuencia de “community areas”) del viaje 
+    - El tiempo estimado (segundos) del viaje.
+    """
     menor=100000000000000000000000
     menorp=''        
     inicio = origen + " " + horaI
