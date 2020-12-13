@@ -88,7 +88,7 @@ def optionTwo():
     asking = True
     problem = "No se encontró el archivo buscado. Ingréselo nuevamente."
     fileRequest = input("¿Qué archivo desea cargar? (small, medium, large): ")
-    while asking:
+    while asking:    #Pregunta hasta que se ingrese un valor válido
         if fileRequest.lower() == "small":
             file = "taxi-trips-wrvz-psew-subset-small.csv"
             asking = False
@@ -104,11 +104,6 @@ def optionTwo():
     print("\nCargando información de servicios...")
     controller.loadFile(cont,file)
     print('Número de servicios cargados: ' +str(controller.servicesSize(cont)))
-
-    numedges = controller.totalConnections(cont)        #Número de arcos
-    numvertex = controller.totalStops(cont)             #Número de vértices
-    print('Numero de vertices: ' + str(numvertex))
-    print('Numero de arcos: ' + str(numedges))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     
@@ -123,7 +118,7 @@ def optionThree():
     print(color.GREEN +"======== Top " + str(cabsLimit) + ' de compañías según taxis afiliados ========'+color.END)
     cabsCount = 1
     for name in enumerate(cabsSorted):
-        if cabsCount > cabsLimit:
+        if cabsCount > cabsLimit: #Revisa que la impresión se haga hasta la compañía número N
             break
         else:
             print(str(cabsCount)+"- "+color.RED+'Empresa: ' +color.END+ name[1][0]+color.RED+
@@ -133,7 +128,7 @@ def optionThree():
     print(color.GREEN +"======== Top " + str(servicesLimit) + ' de compañías según servicios prestados ========'+color.END)
     servicesCount = 1
     for name in enumerate(servicesSorted):
-        if servicesCount > servicesLimit:
+        if servicesCount > servicesLimit: #Revisa que la impresión se haga hasta la compañía número N
             break
         else:
             print(str(servicesCount)+"- "+color.RED+'Empresa: ' +color.END+ name[1][0] + color.RED+' Servicios prestados: '
@@ -151,7 +146,7 @@ def optionFour():
         pointsCount = 1
         print(color.GREEN +"============= Top " + str(N) + ' de taxis con más puntos en ' + date +' ============='+color.END)
         for name in enumerate(pointsSorted):
-            if pointsCount > N:
+            if pointsCount > N: #Revisa que la impresión se haga hasta el taxi número N
                 break
             else:
                 print(str(pointsCount)+"- "+ color.RED +'Taxi: '+ color.END + name[1][0]) 
@@ -168,7 +163,7 @@ def optionFive():
     pointsCount = 1
     print(color.GREEN +"============= Top " + str(M) + ' de taxis con más puntos entre ' + date1 +' y '+date2+' ============='+color.END)
     for name in enumerate(dataSorted):
-        if pointsCount > M:
+        if pointsCount > M:  #Revisa que la impresión se haga hasta el taxi número N
             break
         else:
             print(str(pointsCount)+"- "+ color.RED +'Taxi: '+ color.END + name[1][0])
@@ -180,19 +175,19 @@ def optionSix():
     origin = input("Por favor ingrese el área de origen: ")
     destiny = input("Por favor ingrese el área de destino: ")
     print("RANGO DE HORARIO")
-    hora1 = input("Por favor ingrese la hora inicial (MM:SS): ")  
-    hora2 = input("Por favor ingrese la hora final: (MM:SS): ")    
+    hora1 = input("Por favor ingrese la hora inicial (HH:MM): ")  
+    hora2 = input("Por favor ingrese la hora final (HH:MM): ")    
 
     path,time = controller.mejorH(origin,destiny,hora1,hora2,cont)
     
     elemento1 = lt.getElement(path,1) #Sacamos de la lista el vertive inicial y final
     elemento2 = lt.lastElement(path)
-
     e1 = elemento1.split(" ")         #Separamos hora de vertice
     e2 = elemento2.split(" ") 
     tInicial = e1[1]                  #Hora de inicio
     tFinal   = e2[1]                  #Hora Final
 
+    print("Buscando el mejor horario para iniciar el viaje...")
     print("\n")
     print(color.GREEN + "El mejor horario para iniciar el viaje es a las: "+color.END)
     print(tInicial)

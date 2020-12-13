@@ -84,20 +84,9 @@ def topCabsInRange(catalog,initialDate,finalDate):
     initDate = datetime.datetime.strptime(initialDate,'%Y-%m-%d')
     finDate = datetime.datetime.strptime(finalDate,'%Y-%m-%d')
     return model.topCabsInRange(catalog,initDate.date(),finDate.date())
+
 def servicesSize(catalog):
     return model.servicesSize(catalog)
-
-def totalConnections(catalog):
-    return model.totalConnections(catalog)
-
-def totalStops(catalog):
-    return model.totalStops(catalog)
-
-def connectedComponents(catalog):
-    return model.numSCC(catalog)
-
-def sameCC(catalog,station1,station2):
-    return model.sameCC(catalog,station1,station2)
 
 def mejorH(origen,destino,horaI,horaF, catalog):
     return model.mejorHorario(origen,destino,horaI,horaF, catalog)
